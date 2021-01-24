@@ -19,14 +19,17 @@
 
 package main
 
-import "fmt"
-
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
-	}
-}
-
-func strlen(b []byte) size_t {
-	return size_t(len(b))
+type graph_file_ty struct {
+	reference_count    long
+	filename           string_ty
+	input              graph_recipe_list_nrc_ty
+	output             *graph_recipe_list_nrc_ty
+	pending            long
+	previous_backtrack int
+	previous_error     int
+	mtime_oldest       long   /* used by graph_recipe_run */
+	input_satisfied    size_t /* used by graph_walk */
+	done               long   /* used by graph_walk */
+	input_uptodate     size_t /* used by graph_walk */
+	primary_target     int
 }

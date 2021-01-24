@@ -19,14 +19,12 @@
 
 package main
 
-import "fmt"
+type edge_type_ty uint8
 
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
-	}
-}
-
-func strlen(b []byte) size_t {
-	return size_t(len(b))
-}
+// enum edge_type_ty
+const (
+	edge_type_default edge_type_ty = 0
+	edge_type_strict  edge_type_ty = 1
+	edge_type_weak    edge_type_ty = 2
+	edge_type_exists  edge_type_ty = 4
+)

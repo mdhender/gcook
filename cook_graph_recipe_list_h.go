@@ -19,14 +19,17 @@
 
 package main
 
-import "fmt"
-
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
-	}
+type graph_recipe_list_ty struct {
+	nrecipes     size_t
+	nrecipes_max size_t
+	recipe       **graph_recipe_ty
 }
 
-func strlen(b []byte) size_t {
-	return size_t(len(b))
+/*
+ * again, this time ignoring reference counts
+ */
+type graph_recipe_list_nrc_ty struct {
+	nrecipes     size_t
+	nrecipes_max size_t
+	recipe       **graph_recipe_ty
 }

@@ -19,14 +19,20 @@
 
 package main
 
-import "fmt"
+import "time"
 
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
-	}
+type meter_ty struct {
+	//#ifdef HAVE_GETTIMEOFDAY
+	//	struct timeval  start;
+	//#else
+	//	time_t          start;
+	//#endif
+	start time.Time
+
+	//#ifdef HAVE_WAIT3
+	//	struct rusage   ru;
+	//#endif
+	ru rusage
 }
 
-func strlen(b []byte) size_t {
-	return size_t(len(b))
-}
+type rusage struct{}

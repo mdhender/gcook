@@ -19,14 +19,17 @@
 
 package main
 
-import "fmt"
-
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
+func error_intl(scp *sub_context_ty, s string) {
+	need_to_delete := scp == nil
+	if scp == nil {
+		scp = sub_context_new()
 	}
-}
 
-func strlen(b []byte) size_t {
-	return size_t(len(b))
+	message := subst_intl_wide(scp, s)
+	wrap(message.String())
+	wstr_free(message)
+
+	if need_to_delete {
+		sub_context_delete(scp)
+	}
 }

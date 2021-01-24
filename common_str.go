@@ -19,6 +19,8 @@
 
 package main
 
+import "fmt"
+
 /*
  * Strings are the most heavily used resource in cook.  They are manipulated
  * inside the match functions, and hence are in the inside loop.  For this
@@ -31,6 +33,9 @@ package main
  * strings are the same item in the literal pool means that string equality is
  * a pointer test, and thus very fast.
  */
+
+// #define MAX_HASH_LEN 20
+const MAX_HASH_LEN = 20
 
 /*
  * NAME
@@ -52,12 +57,81 @@ package main
 
 func str_initialize() {
 	hash_table = make(map[string]*string_ty)
-	str_true = str_from_c("1")
-	str_false = str_from_c("")
+	str_true = str_from_string("1")
+	str_false = str_from_string("")
 }
 
-func mem_alloc(i interface{}) **string_ty {
-	panic("!")
+/*
+ * NAME
+ *      str_copy - make a copy of a string
+ *
+ * SYNOPSIS
+ *      string_ty *str_copy(string_ty *s);
+ *
+ * DESCRIPTION
+ *      The str_copy function is used to make a copy of a string.
+ *
+ * RETURNS
+ *      string_ty * - a pointer to a string in dynamic memory.
+ *      Use str_free when finished with.
+ *
+ * CAVEAT
+ *      The contents of the structure pointed to MUST NOT be altered.
+ */
+
+func str_copy(s *string_ty) *string_ty {
+	s.str_references++
+	return s
+}
+
+/*
+ * NAME
+ *      str_equal - test equality of strings
+ *
+ * SYNOPSIS
+ *      int str_equal(string_ty *, string_ty *);
+ *
+ * DESCRIPTION
+ *      The str_equal function is used to test if two strings are equal.
+ *
+ * RETURNS
+ *      int; zero if the strings are not equal, nonzero if the strings are
+ *      equal.
+ *
+ * CAVEAT
+ *      This function is implemented as a macro in strings.h
+ */
+
+func str_equal(s1, s2 *string_ty) bool {
+	return s1 == s2
+}
+
+/*
+ * NAME
+ *      str_free - release a string
+ *
+ * SYNOPSIS
+ *      void str_free(string_ty *s);
+ *
+ * DESCRIPTION
+ *      The str_free function is used to indicate that a string hash been
+ *      finished with.
+ *
+ * RETURNS
+ *      void
+ *
+ * CAVEAT
+ *      This is the only way to release strings DO NOT use the free function.
+ */
+
+func str_free(s *string_ty) *string_ty {
+	assert(str_valid(s), "str_valid(s)")
+	if s.str_references = s.str_references - 1; s.str_references > 0 {
+		return nil
+	}
+	// remove the string from the map
+	delete(hash_table, s.str)
+	return nil
 }
 
 var hash_table map[string]*string_ty
@@ -84,8 +158,8 @@ var str_false *string_ty
  *      The contents of the structure pointed to MUST NOT be altered.
  */
 
-func str_from_c(s string) *string_ty {
-	return str_n_from_slice([]byte(s), len(s))
+func str_from_c(s []byte) *string_ty {
+	return str_n_from_c(s, len(s))
 }
 
 /*
@@ -107,7 +181,7 @@ func str_from_c(s string) *string_ty {
  *      The contents of the structure pointed to MUST NOT be altered.
  */
 
-func str_n_from_slice(s []byte, length int) *string_ty {
+func str_n_from_c(s []byte, length int) *string_ty {
 	if n, ok := hash_table[string(s)]; ok {
 		return n
 	}
@@ -120,6 +194,81 @@ func str_n_from_slice(s []byte, length int) *string_ty {
 	return n
 }
 
-func str_from_slice(s []byte, length int) *string_ty {
-	return str_n_from_slice(s, length)
+func str_from_string(s string) *string_ty {
+	return str_n_from_c([]byte(s), len(s))
+}
+
+/*
+ * NAME
+ *      str_valid - test a string
+ *
+ * SYNOPSIS
+ *      int str_valid(string_ty *s);
+ *
+ * DESCRIPTION
+ *      The str_valid function is used to test if a pointer points to a valid
+ *      string.
+ *
+ * RETURNS
+ *      int: zero if the string is not valid, nonzero if the string is valid.
+ *
+ * CAVEAT
+ *      This function is only available then the DEBUG symbol is #define'd.
+ */
+
+func str_valid(s *string_ty) bool {
+	return s != nil && s.str_references > 0 && strlen(s.str_text) == s.str_length && s.str_hash == hash_generate(s.str_text, s.str_length)
+}
+
+/*
+ * NAME
+ *      str_format - analog of sprintf
+ *
+ * SYNOPSIS
+ *      string_ty *str_format(char *, ...);
+ *
+ * DESCRIPTION
+ *      The str_format function is used to create new strings
+ *      using a format specification similar to printf(3).
+ *
+ * RETURNS
+ *      string_ty * - a pointer to a string in dynamic memory.
+ *      Use str_free when finished with.
+ */
+
+func str_format(format string, a ...interface{}) *string_ty {
+	return str_from_string(fmt.Sprintf(format, a...))
+}
+
+func str_vformat(format string, a ...interface{}) *string_ty {
+	return str_from_string(fmt.Sprintf(format, a...))
+}
+
+/*
+ * NAME
+ *      hash_generate - hash string to number
+ *
+ * SYNOPSIS
+ *      str_hash_ty hash_generate(char *s, size_t n);
+ *
+ * DESCRIPTION
+ *      The hash_generate function is used to make a number from a string.
+ *
+ * RETURNS
+ *      str_hash_ty - the magic number
+ *
+ * CAVEAT
+ *      Only the last MAX_HASH_LEN characters are used.
+ *      It is important that str_hash_ty be unsigned (int or long).
+ */
+
+func hash_generate(b []byte, n size_t) (hashval str_hash_ty) {
+	if n > MAX_HASH_LEN {
+		b = b[n-MAX_HASH_LEN:]
+		n = MAX_HASH_LEN
+	}
+	for i := 0; i < int(n); i++ {
+		hashval = (hashval + (hashval << 1)) ^ uint64(b[i])
+	}
+	return hashval
 }

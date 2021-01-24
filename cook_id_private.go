@@ -21,12 +21,22 @@ package main
 
 import "fmt"
 
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
-	}
+func id_instance_delete(idp *id_ty) {
+	assert(idp != nil, "idp != nil")
+	assert(idp.method != nil, "idp.method != nil")
+	assert(idp.method.destructor != nil, "idp.method.destructor")
+	idp.method.destructor(idp)
+	idp.method = nil /* paranoia */
+	idp = nil        // mem_free(idp)
 }
 
-func strlen(b []byte) size_t {
-	return size_t(len(b))
+func id_instance_new(mp *id_method_ty) *id_ty {
+	trace("id_new()\n{\n")
+	assert(mp != nil, "mp != nil")
+	trace(fmt.Sprintf("is a %q\n", mp.name))
+	idp := &id_ty{} // mem_alloc(mp.size);
+	idp.method = mp
+	trace(fmt.Sprintf("return %p;\n", idp))
+	trace("}\n")
+	return idp
 }

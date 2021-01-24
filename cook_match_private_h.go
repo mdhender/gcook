@@ -19,14 +19,16 @@
 
 package main
 
-import "fmt"
+type char = byte
 
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
-	}
-}
-
-func strlen(b []byte) size_t {
-	return size_t(len(b))
+type match_method_ty struct {
+	name            *char
+	size            int
+	destructor      func(*match_ty)
+	constructor     func(*match_ty)
+	compile         func(*match_ty, *string_ty, *expr_position_ty) int
+	execute         func(*match_ty, *string_ty, *expr_position_ty) int
+	reconstruct_lhs func(*match_ty, *string_ty, *expr_position_ty) *string_ty
+	reconstruct_rhs func(*match_ty, *string_ty, *expr_position_ty) *string_ty
+	usage_mask      func(*match_ty, *string_ty, *expr_position_ty) int
 }

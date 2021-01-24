@@ -19,14 +19,14 @@
 
 package main
 
-import "fmt"
+type expr_position_ty struct {
+	pos_name *string_ty
+	pos_line long
 
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
-	}
-}
-
-func strlen(b []byte) size_t {
-	return size_t(len(b))
+	/*
+	 * This is not very pretty.  I wanted to overload a colon to
+	 * provide the position within the parse, and also how many
+	 * colons (one or two).  The easiest place to do it was here.
+	 */
+	multi int
 }

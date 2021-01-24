@@ -19,14 +19,37 @@
 
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+	"time"
+)
 
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
+var star_col int
+var star_flag bool
+var star_time time.Time
+
+/*
+ * NAME
+ *      star_eoln
+ *
+ * SYNOPSIS
+ *      void star_eoln(void);
+ *
+ * DESCRIPTION
+ *      The star_eoln function is used to end a line of progress stars,
+ *      if any have been issued.  This should be done prior to any
+ *      output.
+ */
+
+func star_eoln() {
+	if !star_flag {
+		return
 	}
-}
-
-func strlen(b []byte) size_t {
-	return size_t(len(b))
+	if star_col != 0 {
+		_, _ = fmt.Fprintln(os.Stderr, "")
+		star_col = 0
+		_ = fflush_slowly(os.Stderr)
+	}
+	star_time = time.Now().Add(time.Second)
 }

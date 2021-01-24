@@ -19,14 +19,27 @@
 
 package main
 
-import "fmt"
+/*
+ * NAME
+ *      mem_alloc - allocate and clear memory
+ *
+ * SYNOPSIS
+ *      char *mem_alloc(size_t n);
+ *
+ * DESCRIPTION
+ *      Mem_alloc uses malloc to allocate the required sized chunk of memory.
+ *      If any error is returned from malloc() an fatal diagnostic is issued.
+ *      The memory is zeroed befor it is returned.
+ *
+ * CAVEAT
+ *      It is the responsibility of the caller to ensure that the space is
+ *      freed when finished with, by a call to free().
+ */
 
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
-	}
+func mem_alloc(i interface{}) **string_ty {
+	panic("!")
 }
 
-func strlen(b []byte) size_t {
-	return size_t(len(b))
+func mem_free(p interface{}) {
+	// noop
 }

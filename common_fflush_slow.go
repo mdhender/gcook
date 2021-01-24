@@ -19,14 +19,37 @@
 
 package main
 
-import "fmt"
+import (
+	"os"
+	"time"
+)
 
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
+/*
+ * If the fflush call reports and error, we allow this many seconds for
+ * recovery.  After that, we report the error as it happened.
+ */
+const MAX_FLUSH_TRY = 10
+
+var fflush_retry_count = 0
+
+func fflush_slowly(fp *os.File) (err error) {
+	for attempts := 0; attempts < MAX_FLUSH_TRY; attempts++ {
+		if err = fp.Sync(); err == nil {
+			/*
+			 * No problem - quit trying.
+			 * Report success.
+			 */
+			return nil
+		}
+
+		fflush_retry_count++
+
+		/*
+		 * Perhaps a little rest will clear the problem.
+		 */
+		time.Sleep(time.Second)
 	}
-}
 
-func strlen(b []byte) size_t {
-	return size_t(len(b))
+	/* ran out of tries - not temporary */
+	return err
 }

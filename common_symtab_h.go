@@ -19,14 +19,16 @@
 
 package main
 
-import "fmt"
-
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
-	}
+type symtab_row_ty struct {
+	key  *string_ty
+	data interface{} // was void *
+	// overflow *symtab_row_ty
 }
 
-func strlen(b []byte) size_t {
-	return size_t(len(b))
+type symtab_ty struct {
+	reap       func(interface{}) // was void *
+	hash_table map[string][]*symtab_row_ty
+	// hash_modulus str_hash_ty
+	// hash_mask    str_hash_ty
+	// hash_load    str_hash_ty
 }

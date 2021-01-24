@@ -19,14 +19,10 @@
 
 package main
 
-import "fmt"
-
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
-	}
-}
-
-func strlen(b []byte) size_t {
-	return size_t(len(b))
+/*
+ * This macro does nothing by itself, but it serves as a keyword for the
+ * xgettext program, when extracting internationalized msgid keys.
+ */
+func i18n(x string) string {
+	return x
 }

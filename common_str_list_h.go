@@ -19,14 +19,8 @@
 
 package main
 
-import "fmt"
-
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
-	}
-}
-
-func strlen(b []byte) size_t {
-	return size_t(len(b))
+type string_list_ty struct {
+	// nstrings     size_t
+	// nstrings_max size_t
+	strings []*string_ty
 }

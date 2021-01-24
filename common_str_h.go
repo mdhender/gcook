@@ -19,7 +19,7 @@
 
 package main
 
-type str_hash_ty uint64
+type str_hash_ty = uint64
 type size_t = int64
 
 type string_ty struct {
@@ -29,4 +29,8 @@ type string_ty struct {
 	str_length     size_t
 	str_text       []byte
 	str            string
+}
+
+func (s *string_ty) String() string {
+	return s.str
 }

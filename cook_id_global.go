@@ -19,14 +19,24 @@
 
 package main
 
-import "fmt"
+var stp *symtab_ty
 
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
+func id_global_reap(p interface{}) {
+	idp, ok := p.(*id_ty)
+	assert(ok, "p.(*id_ty)")
+	id_instance_delete(idp)
+}
+
+func id_global_reset() {
+	if stp != nil {
+		stp = symtab_free(stp)
 	}
 }
 
-func strlen(b []byte) size_t {
-	return size_t(len(b))
+func id_global_stp() *symtab_ty {
+	if stp == nil {
+		stp = symtab_alloc(100)
+		stp.reap = id_global_reap
+	}
+	return stp
 }

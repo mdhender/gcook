@@ -19,14 +19,15 @@
 
 package main
 
-import "fmt"
+type wstr_hash_ty uint64
 
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
-	}
+type wstring_ty struct {
+	wstr_hash       wstr_hash_ty
+	wstr_next       *wstring_ty
+	wstr_references long
+	wstr_length     size_t
+	wstr_text       []byte
+	str             string
 }
 
-func strlen(b []byte) size_t {
-	return size_t(len(b))
-}
+type wchar_t rune

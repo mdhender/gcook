@@ -19,14 +19,23 @@
 
 package main
 
-import "fmt"
+var HAVE_GETTEXT bool
 
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
+/*
+ * NAME
+ *      gettext
+ *
+ * DESCRIPTION
+ *      The gettext function is used to translate messages into a
+ *      language dictated by the LANG environment variable (et al).  If
+ *      the current operating system does not supply one, then pass the
+ *      message through unchanged.  (This is what gettext will do for
+ *      error messages it does not have a translation for.)
+ */
+
+func gettext(s string) string {
+	if !HAVE_GETTEXT {
+		return s
 	}
-}
-
-func strlen(b []byte) size_t {
-	return size_t(len(b))
+	panic("!implemented")
 }

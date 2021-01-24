@@ -19,14 +19,11 @@
 
 package main
 
-import "fmt"
-
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
-	}
-}
-
-func strlen(b []byte) size_t {
-	return size_t(len(b))
+type opcode_method_ty struct {
+	name        *char
+	size        int
+	destructor  func(*opcode_ty)
+	execute     func(*opcode_ty, *opcode_context_ty) opcode_status_ty
+	script      func(*opcode_ty, *opcode_context_ty) opcode_status_ty
+	disassemble func(*opcode_ty)
 }

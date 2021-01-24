@@ -19,14 +19,19 @@
 
 package main
 
-import "fmt"
-
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
-	}
-}
-
-func strlen(b []byte) size_t {
-	return size_t(len(b))
+type recipe_ty struct {
+	reference_count long
+	target          *string_list_ty
+	need1           *opcode_list_ty
+	need2           *opcode_list_ty
+	flags           *flag_ty
+	multiple        int
+	precondition    *opcode_list_ty
+	single_thread   *opcode_list_ty
+	host_binding    *opcode_list_ty
+	out_of_date     *opcode_list_ty
+	up_to_date      *opcode_list_ty
+	pos             expr_position_ty /* for tracing and debugging */
+	implicit        int
+	inhibit         int /* for graph generation */
 }

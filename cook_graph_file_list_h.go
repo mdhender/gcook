@@ -19,14 +19,22 @@
 
 package main
 
-import "fmt"
-
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
-	}
+type graph_file_and_type_ty struct {
+	file      *graph_file_ty
+	edge_type edge_type_ty
 }
 
-func strlen(b []byte) size_t {
-	return size_t(len(b))
+type graph_file_list_ty struct {
+	nfiles     size_t
+	nfiles_max size_t
+	item       *graph_file_and_type_ty
+}
+
+/*
+ * again, this time without touching the reference counts...
+ */
+type graph_file_list_nrc_ty struct {
+	nfiles     size_t
+	nfiles_max size_t
+	item       *graph_file_and_type_ty
 }

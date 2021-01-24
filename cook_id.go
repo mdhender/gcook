@@ -19,6 +19,12 @@
 
 package main
 
+var id_need *string_ty
+var id_younger *string_ty
+var id_target *string_ty
+var id_targets *string_ty
+var id_search_list *string_ty
+
 /*
  * NAME
  *      id_initialize - start up symbol table
@@ -38,6 +44,7 @@ package main
 
 func id_initialize() {
 	trace("init\n")
+
 	id_need = str_from_c("need")
 	id_younger = str_from_c("younger")
 	id_target = str_from_c("target")
@@ -47,12 +54,21 @@ func id_initialize() {
 	id_reset()
 }
 
-var id_need *string_ty
-var id_younger *string_ty
-var id_target *string_ty
-var id_targets *string_ty
-var id_search_list *string_ty
-
 func id_reset() {
+	id_global_reset()
+
+	/*
+	 * set the "version" predefined variable
+	 */
+	var wl string_list_ty
+	string_list_constructor(&wl)
+	s := str_from_c(version_stamp())
+	string_list_append(&wl, s)
+	s = str_free(s)
+	s = str_from_c("version")
+	symtab_assign(id_global_stp(), s, id_variable_new(&wl))
+	s = str_free(s)
+	string_list_destructor(&wl)
+
 	panic("!")
 }

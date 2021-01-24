@@ -19,14 +19,12 @@
 
 package main
 
-import "fmt"
+type opcode_status_ty int
 
-func assert(t bool, msg string) {
-	if !t {
-		panic(fmt.Sprintf("assert(%s)", msg))
-	}
-}
-
-func strlen(b []byte) size_t {
-	return size_t(len(b))
-}
+// enum opcode_status_ty
+const (
+	opcode_status_success opcode_status_ty = iota
+	opcode_status_interrupted
+	opcode_status_error
+	opcode_status_wait
+)
